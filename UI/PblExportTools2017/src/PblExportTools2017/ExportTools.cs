@@ -24,6 +24,11 @@ namespace PblExportTools2017
         public string ObjectCodeExecuteFileName => "pbobjectparser2017.exe";
 
         /// <summary>
+        /// オブジェクト一覧やオブジェクトコードのファイルエンコーディング。
+        /// </summary>
+        public Encoding FileEncoding => new UnicodeEncoding(false, true);
+
+        /// <summary>
         /// PBL内のオブジェクトを取得します。
         /// </summary>
         /// <param name="pblFilePath">PBLファイルパス。</param>
@@ -31,7 +36,7 @@ namespace PblExportTools2017
         /// <returns>PBL内のオブジェクト一覧。</returns>
         public List<PblObjectData> GetObjectList(string pblFilePath, string outputDirectory = "")
         {
-            return PbSupport.GetObjectList(ObjectListExecuteFileName, pblFilePath, outputDirectory);
+            return PbSupport.GetObjectList(FileEncoding, ObjectListExecuteFileName, pblFilePath, outputDirectory);
         }
 
         /// <summary>

@@ -40,7 +40,7 @@ namespace PblExporter
             var outputDirectory = Path.GetTempPath();
             supporter.Export(pblData.FilePath, objectData.ObjectName, objectData.ObjectType, outputHeader, outputDirectory);
             var outputFilePath = Path.Combine(outputDirectory, objectData.ObjectName + PbSupport.GetExtension(objectData.ObjectType));
-            var code = File.ReadAllText(outputFilePath);
+            var code = File.ReadAllText(outputFilePath, supporter.FileEncoding);
             try
             {
                 File.Delete(outputFilePath);

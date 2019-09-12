@@ -24,6 +24,11 @@ namespace PblExporter.Core
         string ObjectCodeExecuteFileName { get; }
 
         /// <summary>
+        /// オブジェクト一覧、オブジェクトコードのファイルエンコーディング。
+        /// </summary>
+        Encoding FileEncoding { get; }
+
+        /// <summary>
         /// PBL内のオブジェクトを取得します。
         /// </summary>
         /// <param name="pblFilePath">PBLファイルパス。</param>

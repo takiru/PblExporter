@@ -21,11 +21,12 @@ namespace PblExporter.Core
         /// <summary>
         /// PBL内のオブジェクトを取得します。
         /// </summary>
+        /// <param name="encoding">ファイルエンコーディング。</param>
         /// <param name="executeFileName">実行ファイル名。</param>
         /// <param name="pblFilePath">PBLファイルパス。</param>
         /// <param name="outputFilePath">出力ファイルパス。</param>
         /// <returns>PBL内のオブジェクト一覧。</returns>
-        public static List<PblObjectData> GetObjectList(string executeFileName, string pblFilePath, string outputFilePath = "")
+        public static List<PblObjectData> GetObjectList(Encoding encoding, string executeFileName, string pblFilePath, string outputFilePath = "")
         {
             var filePath = outputFilePath;
             if (string.IsNullOrWhiteSpace(filePath))
@@ -43,8 +44,7 @@ namespace PblExporter.Core
             p.WaitForExit();
 
             // UTF-16(BOMあり)で読み込み、情報を取得
-            var enc = new UnicodeEncoding(false, true);
-            var values = File.ReadAllLines(filePath, enc);
+            var values = File.ReadAllLines(filePath, encoding);
 
             var result = new List<PblObjectData>();
             foreach (var value in values)
