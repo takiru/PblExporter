@@ -11,6 +11,8 @@ namespace PblExportTools2017
     [Export(typeof(IPbSupporter))]
     public class ExportTools : IPbSupporter
     {
+        public decimal Version => 2017;
+
         public string PbVersion => "PB2017";
 
         /// <summary>

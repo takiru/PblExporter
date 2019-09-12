@@ -19,7 +19,7 @@ namespace PblExporter
         /// <summary>
         /// プラグイン情報を取得します。
         /// </summary>
-        public static IEnumerable<IPbSupporter> PluginList { get; private set; }
+        public static List<IPbSupporter> PluginList { get; private set; }
 
         /// <summary>
         /// プラグインを有するディレクトリを取得します。
@@ -38,7 +38,8 @@ namespace PblExporter
             }
 
             // プラグインの読み込み
-            PluginList = container.GetExportedValues<IPbSupporter>();
+            PluginList = container.GetExportedValues<IPbSupporter>().ToList();
+            PluginList.Sort((a, b) => (int)(a.Version - b.Version));
             return true;
         }
 

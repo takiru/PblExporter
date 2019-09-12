@@ -11,6 +11,11 @@ namespace PblExporter.Core
         /// <summary>
         /// PBバージョン。
         /// </summary>
+        decimal Version { get; }
+
+        /// <summary>
+        /// PBバージョン。
+        /// </summary>
         string PbVersion { get; }
 
         /// <summary>

@@ -11,6 +11,8 @@ namespace PblExportTools115
     [Export(typeof(IPbSupporter))]
     public class ExportTools : IPbSupporter
     {
+        public decimal Version => 11.5m;
+
         public string PbVersion => "PB11.5";
 
         /// <summary>
