@@ -1,0 +1,7 @@
+f_get_object_code	2019/09/12 15:13:34		Function
+f_get_object_extension	2019/09/12 15:14:54		Function
+f_replace	2019/09/12 15:16:02		Function
+f_split	2019/09/12 15:16:39		Function
+f_parse_command_line	2019/09/12 16:16:31		Function
+f_get_library_directory	2019/09/12 16:29:14		Function
+s_object_attribute	2019/09/12 15:51:13		Structure
