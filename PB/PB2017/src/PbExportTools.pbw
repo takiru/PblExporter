@@ -1,0 +1,10 @@
+Save Format v3.0(19990112)
+@begin Unchecked
+@end;
+@begin Targets
+ 0 "PbObjectGetter.pbt";
+ 1 "PbObjectParser.pbt";
+ 2 "Core.pbt";
+@end;
+DefaultTarget "PbObjectParser.pbt";
+DefaultRemoteTarget "PbObjectParser.pbt";
