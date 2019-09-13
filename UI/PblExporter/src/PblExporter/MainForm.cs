@@ -153,6 +153,8 @@ namespace PblExporter
         {
             if (pbSelectComboBox.SelectedItem == null)
             {
+                MessageBox.Show("バージョンが選択されていません。", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                pbSelectComboBox.Focus();
                 return;
             }
 
@@ -215,12 +217,21 @@ namespace PblExporter
 
             foreach (var pblData in pblListBox.SelectedItems.OfType<PblData>())
             {
-                var outputDirectory = Path.Combine(saveDirectoryTextBox.Text, pblData.FileName);
-                if (!Directory.Exists(outputDirectory))
+                var outputDirectory = "";
+                try
                 {
-                    Directory.CreateDirectory(outputDirectory);
+                    outputDirectory = Path.Combine(saveDirectoryTextBox.Text, pblData.FileName);
+                    if (!Directory.Exists(outputDirectory))
+                    {
+                        Directory.CreateDirectory(outputDirectory);
+                    }
+                } catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
                 supporter.Export(pblData.FilePath, PbSupport.BulkExport, "0", outputHeaderCheckBox.Checked, outputDirectory);
+                MessageBox.Show("エクスポートが完了しました。", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -239,16 +250,25 @@ namespace PblExporter
             var supporter = (IPbSupporter)pbSelectComboBox.SelectedItem;
 
             var pblData = (PblData)pblListBox.SelectedItem;
-            var outputDirectory = Path.Combine(saveDirectoryTextBox.Text, pblData.FileName);
-            if (!Directory.Exists(outputDirectory))
+            var outputDirectory = "";
+            try
             {
-                Directory.CreateDirectory(outputDirectory);
+                outputDirectory = Path.Combine(saveDirectoryTextBox.Text, pblData.FileName);
+                if (!Directory.Exists(outputDirectory))
+                {
+                    Directory.CreateDirectory(outputDirectory);
+                }
+            } catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
             foreach (var row in objectListView.SelectedItems.OfType<ListViewItem>())
             {
                 var objectData = (PblObjectData)row.Tag;
                 supporter.Export(pblData.FilePath, objectData.ObjectName, objectData.ObjectType, outputHeaderCheckBox.Checked, outputDirectory);
             }
+            MessageBox.Show("エクスポートが完了しました。", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private bool ValidateExport(bool objectExport)
@@ -365,6 +385,41 @@ namespace PblExporter
         private void pbSelectComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             objectListView.Items.Clear();
+        }
+
+        /// <summary>
+        /// 選択PBLが変わったらオブジェクト一覧をクリア。
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void pblListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            objectListView.Items.Clear();
+        }
+
+        private void pbSelectComboBox_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            //背景を描画する
+            //項目が選択されている時は強調表示される
+            e.DrawBackground();
+
+            ComboBox cmb = (ComboBox)sender;
+            //項目に表示する文字列
+            string txt = e.Index > -1 ? ((IPbSupporter)cmb.Items[e.Index]).PbVersion : cmb.Text;
+            //使用するフォント
+            Font f = new Font(txt, cmb.Font.Size);
+            //使用するブラシ
+            Brush b = new SolidBrush(e.ForeColor);
+            //文字列を描画する
+            float ym =
+                (e.Bounds.Height - e.Graphics.MeasureString(txt, f).Height) / 2;
+            e.Graphics.DrawString(txt, f, b, e.Bounds.X, e.Bounds.Y + ym);
+
+            f.Dispose();
+            b.Dispose();
+
+            //フォーカスを示す四角形を描画
+            e.DrawFocusRectangle();
         }
     }
 }

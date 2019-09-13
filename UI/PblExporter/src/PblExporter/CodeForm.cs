@@ -25,6 +25,7 @@ namespace PblExporter
         public DialogResult ShowDialog(IPbSupporter supporter, PblData pblData, PblObjectData objectData, bool outputHeader)
         {
             ReadCode(supporter, pblData, objectData, outputHeader);
+            codeMetTextBox.SelectionStart = 0;
             return this.ShowDialog();
         }
 
