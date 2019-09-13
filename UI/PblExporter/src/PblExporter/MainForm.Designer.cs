@@ -50,6 +50,7 @@
             this.exportPblButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.pbSelectComboBox = new Metroit.Windows.Forms.MetComboBox();
+            this.searchSubDirCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -64,11 +65,11 @@
             this.pblListBox.FormattingEnabled = true;
             this.pblListBox.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.pblListBox.ItemHeight = 18;
-            this.pblListBox.Location = new System.Drawing.Point(7, 96);
+            this.pblListBox.Location = new System.Drawing.Point(7, 132);
             this.pblListBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pblListBox.Name = "pblListBox";
             this.pblListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.pblListBox.Size = new System.Drawing.Size(276, 688);
+            this.pblListBox.Size = new System.Drawing.Size(276, 652);
             this.pblListBox.TabIndex = 5;
             this.pblListBox.SelectedIndexChanged += new System.EventHandler(this.pblListBox_SelectedIndexChanged);
             this.pblListBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.pblListBox_DragDrop);
@@ -130,6 +131,7 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox1.Controls.Add(this.searchSubDirCheckBox);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.pblListBox);
             this.groupBox1.Controls.Add(this.pblAddButton);
@@ -147,7 +149,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 74);
+            this.label3.Location = new System.Drawing.Point(6, 82);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(236, 18);
             this.label3.TabIndex = 4;
@@ -332,6 +334,18 @@
             this.pbSelectComboBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.pbSelectComboBox_DrawItem);
             this.pbSelectComboBox.SelectedIndexChanged += new System.EventHandler(this.pbSelectComboBox_SelectedIndexChanged);
             // 
+            // searchSubDirCheckBox
+            // 
+            this.searchSubDirCheckBox.AutoSize = true;
+            this.searchSubDirCheckBox.Checked = true;
+            this.searchSubDirCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.searchSubDirCheckBox.Location = new System.Drawing.Point(9, 103);
+            this.searchSubDirCheckBox.Name = "searchSubDirCheckBox";
+            this.searchSubDirCheckBox.Size = new System.Drawing.Size(195, 22);
+            this.searchSubDirCheckBox.TabIndex = 6;
+            this.searchSubDirCheckBox.Text = "サブディレクトリまで検索する";
+            this.searchSubDirCheckBox.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 18F);
@@ -384,5 +398,6 @@
         private System.Windows.Forms.Label label4;
         private Metroit.Windows.Forms.MetComboBox pbSelectComboBox;
         private Metroit.Windows.Forms.MetTextBox saveDirectoryTextBox;
+        private System.Windows.Forms.CheckBox searchSubDirCheckBox;
     }
 }

@@ -116,6 +116,11 @@ namespace PblExporter
                     e.Effect = DragDropEffects.All;
                     return;
                 }
+                if (Directory.Exists(file))
+                {
+                    e.Effect = DragDropEffects.All;
+                    return;
+                }
             }
             e.Effect = DragDropEffects.None;
         }
@@ -127,27 +132,49 @@ namespace PblExporter
         /// <param name="e"></param>
         private void pblListBox_DragDrop(object sender, DragEventArgs e)
         {
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
-            foreach (var file in files)
+            string[] paths = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+            foreach (var path in paths)
             {
-                if (Path.GetExtension(file) != ".pbl")
-                {
-                    continue;
-                }
-
-                // 既に登録されている場合は何もしない
-                var count = pblListBoxItem.Count((x) => x.FilePath == file);
-                if (count > 0)
-                {
-                    continue;
-                }
-
-                pblListBoxItem.Add(new PblData(file));
+                addPblList(path);
 
             }
             pblListBoxItem.Sort((a, b) => string.Compare(a.FileName, b.FileName));
             bindingSource.ResetBindings(false);
         }
+
+        private void addPblList(string path)
+        {
+            if (Path.GetExtension(path) == ".pbl")
+            {
+                // 既に登録されている場合は何もしない
+                var count = pblListBoxItem.Count((x) => x.FilePath == path);
+                if (count > 0)
+                {
+                    return;
+                }
+                pblListBoxItem.Add(new PblData(path));
+            }
+
+            if (Directory.Exists(path))
+            {
+                var files = Directory.GetFiles(path, "*.pbl");
+                foreach (var filePath in files)
+                {
+                    addPblList(filePath);
+                }
+
+                if (!searchSubDirCheckBox.Checked)
+                {
+                    return;
+                }
+                var directories = Directory.GetDirectories(path, "*", SearchOption.AllDirectories);
+                foreach (var directory in directories)
+                {
+                    addPblList(directory);
+                }
+            }
+        }
+
 
         private void pblListBox_DoubleClick(object sender, EventArgs e)
         {
