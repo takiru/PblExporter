@@ -231,8 +231,8 @@ namespace PblExporter
                     return;
                 }
                 supporter.Export(pblData.FilePath, PbSupport.BulkExport, "0", outputHeaderCheckBox.Checked, outputDirectory);
-                MessageBox.Show("エクスポートが完了しました。", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+            MessageBox.Show("エクスポートが完了しました。", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         /// <summary>
