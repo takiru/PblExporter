@@ -12,7 +12,7 @@ namespace PblExporter
         /// アプリケーションのメイン エントリ ポイントです。
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -23,7 +23,7 @@ namespace PblExporter
                 return;
             }
 
-            Application.Run(new MainForm());
+            Startup.Start(args);
         }
     }
 }

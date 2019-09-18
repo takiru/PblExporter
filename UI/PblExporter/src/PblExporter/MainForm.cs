@@ -247,12 +247,13 @@ namespace PblExporter
                 var outputDirectory = "";
                 try
                 {
-                    outputDirectory = Path.Combine(saveDirectoryTextBox.Text, pblData.FileName);
+                    outputDirectory = Path.Combine(saveDirectoryTextBox.Text, Path.GetFileNameWithoutExtension(pblData.FilePath));
                     if (!Directory.Exists(outputDirectory))
                     {
                         Directory.CreateDirectory(outputDirectory);
                     }
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -280,12 +281,13 @@ namespace PblExporter
             var outputDirectory = "";
             try
             {
-                outputDirectory = Path.Combine(saveDirectoryTextBox.Text, pblData.FileName);
+                outputDirectory = Path.Combine(saveDirectoryTextBox.Text, Path.GetFileNameWithoutExtension(pblData.FilePath));
                 if (!Directory.Exists(outputDirectory))
                 {
                     Directory.CreateDirectory(outputDirectory);
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
