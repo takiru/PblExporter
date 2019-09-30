@@ -19,6 +19,11 @@ namespace PblExporter.Core
         public const string BulkExport = @"bulk";
 
         /// <summary>
+        /// オブジェクトのコメントに含まれる改行文字。
+        /// </summary>
+        public const string ObjectCommentNewLineSign = @"~r~n";
+
+        /// <summary>
         /// PBL内のオブジェクトを取得します。
         /// </summary>
         /// <param name="encoding">ファイルエンコーディング。</param>
@@ -32,7 +37,7 @@ namespace PblExporter.Core
             if (string.IsNullOrWhiteSpace(filePath))
             {
                 filePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                filePath = Path.Combine(filePath, "PbObjects.txt");
+                filePath = Path.Combine(filePath, "PblObjects.txt");
             }
 
             var executeFilePath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetCallingAssembly().Location), executeFileName);

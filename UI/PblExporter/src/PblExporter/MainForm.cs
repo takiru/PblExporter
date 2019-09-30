@@ -60,10 +60,18 @@ namespace PblExporter
                 var count = pblListBoxItem.Count((x) => x.FilePath == fileName);
                 if (count > 0)
                 {
-                    return;
+                    continue;
                 }
 
-                pblListBoxItem.Add(new PblData(fileName));
+                var exists = pblListBoxItem.Where((x) => x.FileName == Path.GetFileName(fileName)).FirstOrDefault();
+                if (exists != null)
+                {
+                    MessageBox.Show("同名のPBLがあるため追加されません。" + Environment.NewLine + fileName, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+                else
+                {
+                    pblListBoxItem.Add(new PblData(fileName));
+                }
             }
 
             pblListBoxItem.Sort((a, b) => string.Compare(a.FileName, b.FileName));
@@ -125,6 +133,8 @@ namespace PblExporter
             e.Effect = DragDropEffects.None;
         }
 
+        private bool isDropping = false;
+
         /// <summary>
         /// ドラッグしたpblファイルをリストに追加。
         /// </summary>
@@ -132,14 +142,18 @@ namespace PblExporter
         /// <param name="e"></param>
         private void pblListBox_DragDrop(object sender, DragEventArgs e)
         {
+            isDropping = true;
+
             string[] paths = (string[])e.Data.GetData(DataFormats.FileDrop, false);
             foreach (var path in paths)
             {
                 addPblList(path);
-
             }
             pblListBoxItem.Sort((a, b) => string.Compare(a.FileName, b.FileName));
             bindingSource.ResetBindings(false);
+            pblListBox.SelectedItem = null;
+
+            isDropping = false;
         }
 
         private void addPblList(string path)
@@ -152,7 +166,15 @@ namespace PblExporter
                 {
                     return;
                 }
-                pblListBoxItem.Add(new PblData(path));
+                var exists = pblListBoxItem.Where((x) => x.FileName == Path.GetFileName(path)).FirstOrDefault();
+                if (exists != null)
+                {
+                    MessageBox.Show("同名のPBLがあるため追加されません。" + Environment.NewLine + path, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+                else
+                {
+                    pblListBoxItem.Add(new PblData(path));
+                }
             }
 
             if (Directory.Exists(path))
@@ -173,34 +195,6 @@ namespace PblExporter
                     addPblList(directory);
                 }
             }
-        }
-
-
-        private void pblListBox_DoubleClick(object sender, EventArgs e)
-        {
-            if (pbSelectComboBox.SelectedItem == null)
-            {
-                MessageBox.Show("バージョンが選択されていません。", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                pbSelectComboBox.Focus();
-                return;
-            }
-
-            var supporter = (IPbSupporter)pbSelectComboBox.SelectedItem;
-
-            var pblData = (PblData)pblListBox.SelectedItem;
-            var result = supporter.GetObjectList(pblData.FilePath);
-
-            objectListView.Items.Clear();
-            foreach (var item in result)
-            {
-                var li = new ListViewItem(item.ObjectName);
-                li.SubItems.Add(new ListViewItem.ListViewSubItem(li, item.ObjectType));
-                li.SubItems.Add(new ListViewItem.ListViewSubItem(li, item.UpdateDate.ToString("yyyy/MM/dd HH:mm:ss")));
-                li.SubItems.Add(new ListViewItem.ListViewSubItem(li, item.Comment));
-                li.Tag = item;
-                objectListView.Items.Add(li);
-            }
-            objectListView_ColumnClick(objectListView, new ColumnClickEventArgs(0));
         }
 
         /// <summary>
@@ -417,13 +411,54 @@ namespace PblExporter
         }
 
         /// <summary>
-        /// 選択PBLが変わったらオブジェクト一覧をクリア。
+        /// 選択PBLが変わったらオブジェクト一覧を表示する。
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void pblListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            // 複数指定されている場合はオブジェクト一覧はリセットする
+            if (pblListBox.SelectedItems.Count > 1)
+            {
+                objectListView.Items.Clear();
+                return;
+            }
+
+            if (pblListBox.SelectedItem == null)
+            {
+                return;
+            }
+
+            if (isDropping)
+            {
+                return;
+            }
+
+            // オブジェクト一覧を表示する。
+            if (pbSelectComboBox.SelectedItem == null)
+            {
+                MessageBox.Show("バージョンが選択されていません。", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                pbSelectComboBox.Focus();
+                return;
+            }
+
+            var supporter = (IPbSupporter)pbSelectComboBox.SelectedItem;
+
+            var pblData = (PblData)pblListBox.SelectedItem;
+            var result = supporter.GetObjectList(pblData.FilePath);
+
             objectListView.Items.Clear();
+            foreach (var item in result)
+            {
+                var li = new ListViewItem(item.ObjectName);
+                li.SubItems.Add(new ListViewItem.ListViewSubItem(li, item.ObjectType));
+                li.SubItems.Add(new ListViewItem.ListViewSubItem(li, item.UpdateDate.ToString("yyyy/MM/dd HH:mm:ss")));
+                li.SubItems.Add(new ListViewItem.ListViewSubItem(li, item.Comment.Replace(PbSupport.ObjectCommentNewLineSign, " ")));
+                li.Tag = item;
+                objectListView.Items.Add(li);
+            }
+            objectListView.Tag = null;
+            objectListView_ColumnClick(objectListView, new ColumnClickEventArgs(0));
         }
 
         private void pbSelectComboBox_DrawItem(object sender, DrawItemEventArgs e)

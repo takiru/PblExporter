@@ -34,6 +34,7 @@
             this.pblClearButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.searchSubDirCheckBox = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -50,7 +51,6 @@
             this.exportPblButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.pbSelectComboBox = new Metroit.Windows.Forms.MetComboBox();
-            this.searchSubDirCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -74,7 +74,6 @@
             this.pblListBox.SelectedIndexChanged += new System.EventHandler(this.pblListBox_SelectedIndexChanged);
             this.pblListBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.pblListBox_DragDrop);
             this.pblListBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.pblListBox_DragEnter);
-            this.pblListBox.DoubleClick += new System.EventHandler(this.pblListBox_DoubleClick);
             // 
             // pblAddButton
             // 
@@ -145,6 +144,18 @@
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "PBL";
+            // 
+            // searchSubDirCheckBox
+            // 
+            this.searchSubDirCheckBox.AutoSize = true;
+            this.searchSubDirCheckBox.Checked = true;
+            this.searchSubDirCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.searchSubDirCheckBox.Location = new System.Drawing.Point(9, 103);
+            this.searchSubDirCheckBox.Name = "searchSubDirCheckBox";
+            this.searchSubDirCheckBox.Size = new System.Drawing.Size(195, 22);
+            this.searchSubDirCheckBox.TabIndex = 6;
+            this.searchSubDirCheckBox.Text = "サブディレクトリまで検索する";
+            this.searchSubDirCheckBox.UseVisualStyleBackColor = true;
             // 
             // label3
             // 
@@ -333,18 +344,6 @@
             this.pbSelectComboBox.TabIndex = 1;
             this.pbSelectComboBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.pbSelectComboBox_DrawItem);
             this.pbSelectComboBox.SelectedIndexChanged += new System.EventHandler(this.pbSelectComboBox_SelectedIndexChanged);
-            // 
-            // searchSubDirCheckBox
-            // 
-            this.searchSubDirCheckBox.AutoSize = true;
-            this.searchSubDirCheckBox.Checked = true;
-            this.searchSubDirCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.searchSubDirCheckBox.Location = new System.Drawing.Point(9, 103);
-            this.searchSubDirCheckBox.Name = "searchSubDirCheckBox";
-            this.searchSubDirCheckBox.Size = new System.Drawing.Size(195, 22);
-            this.searchSubDirCheckBox.TabIndex = 6;
-            this.searchSubDirCheckBox.Text = "サブディレクトリまで検索する";
-            this.searchSubDirCheckBox.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
