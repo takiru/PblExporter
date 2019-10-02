@@ -6,5 +6,5 @@ Save Format v3.0(19990112)
  1 "pbobjectgetter.pbt";
  2 "pbobjectparser.pbt";
 @end;
-DefaultTarget "pbobjectparser.pbt";
-DefaultRemoteTarget "pbobjectparser.pbt";
+DefaultTarget "pbobjectgetter.pbt";
+DefaultRemoteTarget "pbobjectgetter.pbt";
