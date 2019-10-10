@@ -42,6 +42,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IPbSupporter.cs" />
+    <Compile Include="Orca\EntryType.cs" />
+    <Compile Include="Orca\ObjectInfo.cs" />
+    <Compile Include="Orca\OrcaCommand.cs" />
+    <Compile Include="Orca\OrcaExecutorBase.cs" />
+    <Compile Include="Orca\OrcaReturnCode.cs" />
+    <Compile Include="Orca\PBORCA_CONFIG_SESSION.cs" />
+    <Compile Include="Orca\PBORCA_ENCODING.cs" />
+    <Compile Include="Orca\PBORCA_ENUM_FILEWRITE_OPTION.cs" />
     <Compile Include="PblObjectData.cs" />
     <Compile Include="PbSupport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

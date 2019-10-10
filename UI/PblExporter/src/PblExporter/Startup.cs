@@ -98,11 +98,12 @@ namespace PblExporter
                     var pathList = new List<string>();
                     findRecursivePath(pblPath, pathList);
                     pblPaths = pathList.ToArray();
-                } else
+                }
+                else
                 {
                     pblPaths = Directory.GetFiles(pblPath, "*.pbl");
                 }
-                
+
                 objectName = PbSupport.BulkExport;
                 objectType = "0";
             }
@@ -123,7 +124,7 @@ namespace PblExporter
                     }
                 }
 
-                supporter.Export(path, objectName, objectType, outputHeader, outputPath);
+                supporter.Export(path, objectName, PbSupport.GetEntryType(objectType), outputHeader, outputPath);
             }
         }
 

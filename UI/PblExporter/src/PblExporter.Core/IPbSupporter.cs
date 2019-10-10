@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PblExporter.Core.Orca;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -39,17 +40,17 @@ namespace PblExporter.Core
         /// <param name="pblFilePath">PBLファイルパス。</param>
         /// <param name="outputFilePath">出力ファイルパス。</param>
         /// <returns>PBL内のオブジェクト一覧。</returns>
-        List<PblObjectData> GetObjectList(string pblFilePath, string outputFilePath = "");
+        List<ObjectInfo> GetObjectList(string pblFilePath, string outputFilePath = "");
 
         /// <summary>
         /// PBLの対処オブジェクトのコードを出力します。
         /// </summary>
         /// <param name="pblFilePath">PBLファイルパス。</param>
         /// <param name="objectName">オブジェクト名。</param>
-        /// <param name="objectType">オブジェクトタイプ名。</param>
+        /// <param name="entryType">エントリータイプ名。</param>
         /// <param name="outputHeader">ファイルヘッダーを出力するかどうか。</param>
         /// <param name="outputDirectory">出力フォルダパス。</param>
-        void Export(string pblFilePath, string objectName, string objectType, bool outputHeader, string outputDirectory = "");
+        void Export(string pblFilePath, string objectName, EntryType entryType, bool outputHeader, string outputDirectory = "");
 
     }
 }

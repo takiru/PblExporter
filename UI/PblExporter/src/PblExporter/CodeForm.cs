@@ -1,4 +1,5 @@
 ﻿using PblExporter.Core;
+using PblExporter.Core.Orca;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,9 +23,9 @@ namespace PblExporter
             InitializeComponent();
         }
 
-        public DialogResult ShowDialog(IPbSupporter supporter, PblData pblData, PblObjectData objectData, bool outputHeader)
+        public DialogResult ShowDialog(IPbSupporter supporter, PblData pblData, ObjectInfo ObjectInfo, bool outputHeader)
         {
-            ReadCode(supporter, pblData, objectData, outputHeader);
+            ReadCode(supporter, pblData, ObjectInfo, outputHeader);
             codeMetTextBox.SelectionStart = 0;
             return this.ShowDialog();
         }
@@ -36,11 +37,11 @@ namespace PblExporter
         /// <param name="pblData"></param>
         /// <param name="objectData"></param>
         /// <param name="outputHeader"></param>
-        private void ReadCode(IPbSupporter supporter, PblData pblData, PblObjectData objectData, bool outputHeader)
+        private void ReadCode(IPbSupporter supporter, PblData pblData, ObjectInfo ObjectInfo, bool outputHeader)
         {
             var outputDirectory = Path.GetTempPath();
-            supporter.Export(pblData.FilePath, objectData.ObjectName, objectData.ObjectType, outputHeader, outputDirectory);
-            var outputFilePath = Path.Combine(outputDirectory, objectData.ObjectName + PbSupport.GetExtension(objectData.ObjectType));
+            supporter.Export(pblData.FilePath, ObjectInfo.ObjectName, ObjectInfo.EntryType, outputHeader, outputDirectory);
+            var outputFilePath = Path.Combine(outputDirectory, ObjectInfo.ObjectName + PbSupport.GetExtension(PbSupport.GetObjectType(ObjectInfo.EntryType)));
             var code = File.ReadAllText(outputFilePath, supporter.FileEncoding);
             try
             {

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PblExporter.Core;
+using PblExporter.Core.Orca;
 
 namespace PblExportTools80
 {
@@ -35,7 +36,7 @@ namespace PblExportTools80
         /// <param name="pblFilePath">PBLファイルパス。</param>
         /// <param name="outputDirectory">出力ファイルパス。</param>
         /// <returns>PBL内のオブジェクト一覧。</returns>
-        public List<PblObjectData> GetObjectList(string pblFilePath, string outputDirectory = "")
+        public List<ObjectInfo> GetObjectList(string pblFilePath, string outputDirectory = "")
         {
             return PbSupport.GetObjectList(FileEncoding, ObjectListExecuteFileName, pblFilePath, outputDirectory);
         }
@@ -45,12 +46,12 @@ namespace PblExportTools80
         /// </summary>
         /// <param name="pblFilePath">PBLファイルパス。</param>
         /// <param name="objectName">オブジェクト名。</param>
-        /// <param name="objectType">オブジェクトタイプ名。</param>
+        /// <param name="entryType">エントリータイプ名。</param>
         /// <param name="outputHeader">ファイルヘッダーを出力するかどうか。</param>
         /// <param name="outputDirectory">出力フォルダパス。</param>
-        public void Export(string pblFilePath, string objectName, string objectType, bool outputHeader, string outputDirectory = "")
+        public void Export(string pblFilePath, string objectName, EntryType entryType, bool outputHeader, string outputDirectory = "")
         {
-            PbSupport.Export(ObjectCodeExecuteFileName, pblFilePath, objectName, objectType, outputHeader, outputDirectory);
+            PbSupport.Export(ObjectCodeExecuteFileName, pblFilePath, objectName, PbSupport.GetObjectType(entryType), outputHeader, outputDirectory);
         }
     }
 }

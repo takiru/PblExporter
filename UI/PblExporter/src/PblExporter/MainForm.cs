@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Reflection;
 using System.Collections;
+using PblExporter.Core.Orca;
 
 namespace PblExporter
 {
@@ -90,6 +91,7 @@ namespace PblExporter
                 pblListBoxItem.Remove((PblData)item);
             }
             bindingSource.ResetBindings(false);
+            objectListView.Items.Clear();
         }
 
         /// <summary>
@@ -101,6 +103,7 @@ namespace PblExporter
         {
             pblListBoxItem.Clear();
             bindingSource.ResetBindings(false);
+            objectListView.Items.Clear();
         }
 
         /// <summary>
@@ -252,7 +255,7 @@ namespace PblExporter
                     MessageBox.Show(ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                supporter.Export(pblData.FilePath, PbSupport.BulkExport, "0", outputHeaderCheckBox.Checked, outputDirectory);
+                supporter.Export(pblData.FilePath, PbSupport.BulkExport, EntryType.None, outputHeaderCheckBox.Checked, outputDirectory);
             }
             MessageBox.Show("エクスポートが完了しました。", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -288,8 +291,8 @@ namespace PblExporter
             }
             foreach (var row in objectListView.SelectedItems.OfType<ListViewItem>())
             {
-                var objectData = (PblObjectData)row.Tag;
-                supporter.Export(pblData.FilePath, objectData.ObjectName, objectData.ObjectType, outputHeaderCheckBox.Checked, outputDirectory);
+                var objectData = (ObjectInfo)row.Tag;
+                supporter.Export(pblData.FilePath, objectData.ObjectName, objectData.EntryType, outputHeaderCheckBox.Checked, outputDirectory);
             }
             MessageBox.Show("エクスポートが完了しました。", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -371,7 +374,7 @@ namespace PblExporter
         {
             var supporter = (IPbSupporter)pbSelectComboBox.SelectedItem;
             var pblData = (PblData)pblListBox.SelectedItem;
-            var objectData = (PblObjectData)objectListView.SelectedItems[0].Tag;
+            var objectData = (ObjectInfo)objectListView.SelectedItems[0].Tag;
 
             var form = new CodeForm();
             form.ShowDialog(supporter, pblData, objectData, outputHeaderCheckBox.Checked);
@@ -451,8 +454,8 @@ namespace PblExporter
             foreach (var item in result)
             {
                 var li = new ListViewItem(item.ObjectName);
-                li.SubItems.Add(new ListViewItem.ListViewSubItem(li, item.ObjectType));
-                li.SubItems.Add(new ListViewItem.ListViewSubItem(li, item.UpdateDate.ToString("yyyy/MM/dd HH:mm:ss")));
+                li.SubItems.Add(new ListViewItem.ListViewSubItem(li, PbSupport.GetObjectType(item.EntryType)));
+                li.SubItems.Add(new ListViewItem.ListViewSubItem(li, item.CreateDateTime.ToString("yyyy/MM/dd HH:mm:ss")));
                 li.SubItems.Add(new ListViewItem.ListViewSubItem(li, item.Comment.Replace(PbSupport.ObjectCommentNewLineSign, " ")));
                 li.Tag = item;
                 objectListView.Items.Add(li);

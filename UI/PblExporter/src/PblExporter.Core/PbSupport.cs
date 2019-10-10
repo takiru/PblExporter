@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using PblExporter.Core.Orca;
 
 namespace PblExporter.Core
 {
@@ -31,7 +32,7 @@ namespace PblExporter.Core
         /// <param name="pblFilePath">PBLファイルパス。</param>
         /// <param name="outputFilePath">出力ファイルパス。</param>
         /// <returns>PBL内のオブジェクト一覧。</returns>
-        public static List<PblObjectData> GetObjectList(Encoding encoding, string executeFileName, string pblFilePath, string outputFilePath = "")
+        public static List<ObjectInfo> GetObjectList(Encoding encoding, string executeFileName, string pblFilePath, string outputFilePath = "")
         {
             var filePath = outputFilePath;
             if (string.IsNullOrWhiteSpace(filePath))
@@ -51,10 +52,11 @@ namespace PblExporter.Core
             // UTF-16(BOMあり)で読み込み、情報を取得
             var values = File.ReadAllLines(filePath, encoding);
 
-            var result = new List<PblObjectData>();
+            var result = new List<ObjectInfo>();
             foreach (var value in values)
             {
-                result.Add(new PblObjectData(value));
+                var objectData = new PblObjectData(value);
+                result.Add(new ObjectInfo(pblFilePath, objectData.ObjectName, PbSupport.GetEntryType(objectData.ObjectType), objectData.UpdateDate, 0, objectData.Comment));
             }
 
             try
@@ -125,6 +127,84 @@ namespace PblExporter.Core
                     return ".srf";
             }
 
+            return null;
+        }
+
+        /// <summary>
+        /// オブジェクトタイプからエントリータイプを取得します。
+        /// </summary>
+        /// <param name="typeName">オブジェクトタイプ名。</param>
+        /// <returns>エントリータイプ。</returns>
+        public static EntryType GetEntryType(string typeName)
+        {
+            switch (typeName)
+            {
+                case "Application":
+                    return EntryType.PBORCA_APPLICATION;
+                case "Window":
+                    return EntryType.PBORCA_WINDOW;
+                case "DataWindow":
+                    return EntryType.PBORCA_DATAWINDOW;
+                case "Menu":
+                    return EntryType.PBORCA_MENU;
+                case "Query":
+                    return EntryType.PBORCA_QUERY;
+                case "Structure":
+                    return EntryType.PBORCA_STRUCTURE;
+                case "UserObject":
+                    return EntryType.PBORCA_USEROBJECT;
+                case "Pipeline":
+                    return EntryType.PBORCA_PIPELINE;
+                case "Project":
+                    return EntryType.PBORCA_PROJECT;
+                case "Function":
+                    return EntryType.PBORCA_FUNCTION;
+                case "ProxyObject":
+                    return EntryType.PBORCA_PROXYOBJECT;
+                case "Binary":
+                    return EntryType.PBORCA_BINARY;
+                case "0":
+                    return EntryType.None;
+            }
+            return EntryType.None;
+        }
+
+        /// <summary>
+        /// エントリータイプからオブジェクトタイプを取得します。
+        /// </summary>
+        /// <param name="entryType">エントリータイプ。。</param>
+        /// <returns>オブジェクトタイプ名。</returns>
+        public static string GetObjectType(EntryType entryType)
+        {
+            switch (entryType)
+            {
+                case EntryType.PBORCA_APPLICATION:
+                    return "Application";
+                case EntryType.PBORCA_WINDOW:
+                    return "Window";
+                case EntryType.PBORCA_DATAWINDOW:
+                    return "DataWindow";
+                case EntryType.PBORCA_MENU:
+                    return "Menu";
+                case EntryType.PBORCA_QUERY:
+                    return "Query";
+                case EntryType.PBORCA_STRUCTURE:
+                    return "Structure";
+                case EntryType.PBORCA_USEROBJECT:
+                    return "UserObject";
+                case EntryType.PBORCA_PIPELINE:
+                    return "Pipeline";
+                case EntryType.PBORCA_PROJECT:
+                    return "Project";
+                case EntryType.PBORCA_FUNCTION:
+                    return "Function";
+                case EntryType.PBORCA_PROXYOBJECT:
+                    return "ProxyObject";
+                case EntryType.PBORCA_BINARY:
+                    return "Binary";
+                case EntryType.None:
+                    return "0";
+            }
             return null;
         }
     }
