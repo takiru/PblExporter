@@ -72,7 +72,7 @@ namespace PblExportTools120
             config.bExportCreateFile = true;
             config.bExportHeaders = outputHeader;
             config.bExportIncludeBinary = false;
-            config.eClobber = PBORCA_ENUM_FILEWRITE_OPTION.PBORCA_CLOBBER_ALWAYS;
+            config.eClobber = PBORCA_ENUM_FILEWRITE_OPTION.PBORCA_CLOBBER;
             config.eExportEncoding = PBORCA_ENCODING.PBORCA_UNICODE;
             config.pExportDirectory = outputDirectory;
             orca.SetSessionConfig(config);
