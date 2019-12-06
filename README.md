@@ -1,6 +1,10 @@
 # PblExporter
 PowerBuilder の PBLからソースのエクスポートを行う。
 
+# 動作要件
+ - .NET Framework 4.5以上
+ - 必要モジュールに記載されているPowerBuilder環境
+
 # エクスポート可能バージョン
   - 7.0J
   - 8.0J
