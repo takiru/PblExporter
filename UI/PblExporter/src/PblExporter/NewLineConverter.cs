@@ -26,7 +26,7 @@ namespace PblExporter
                 return null;
             }
 
-            var result = value.ToString().Replace(PbSupport.ObjectCommentNewLineSign, " ");
+            var result = value.ToString().Replace(Environment.NewLine, " ");
             return result;
         }
     }
