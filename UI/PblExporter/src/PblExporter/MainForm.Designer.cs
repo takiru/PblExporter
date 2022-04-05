@@ -51,6 +51,10 @@
             this.exportPblButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.pbSelectComboBox = new Metroit.Windows.Forms.MetComboBox();
+            this.exportPblInfoButton = new System.Windows.Forms.Button();
+            this.exportObjectInfoButton = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.delimiterComboBox = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -202,6 +206,7 @@
             this.updateDateColumnHeader,
             this.commentColumnHeader});
             this.objectListView.FullRowSelect = true;
+            this.objectListView.HideSelection = false;
             this.objectListView.Location = new System.Drawing.Point(7, 49);
             this.objectListView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.objectListView.Name = "objectListView";
@@ -266,6 +271,10 @@
             // 
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Controls.Add(this.delimiterComboBox);
+            this.groupBox3.Controls.Add(this.label5);
+            this.groupBox3.Controls.Add(this.exportObjectInfoButton);
+            this.groupBox3.Controls.Add(this.exportPblInfoButton);
             this.groupBox3.Controls.Add(this.saveDirectoryTextBox);
             this.groupBox3.Controls.Add(this.exportObjectButton);
             this.groupBox3.Controls.Add(this.exportPblButton);
@@ -345,6 +354,51 @@
             this.pbSelectComboBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.pbSelectComboBox_DrawItem);
             this.pbSelectComboBox.SelectedIndexChanged += new System.EventHandler(this.pbSelectComboBox_SelectedIndexChanged);
             // 
+            // exportPblInfoButton
+            // 
+            this.exportPblInfoButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.exportPblInfoButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightCyan;
+            this.exportPblInfoButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.exportPblInfoButton.Location = new System.Drawing.Point(116, 80);
+            this.exportPblInfoButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.exportPblInfoButton.Name = "exportPblInfoButton";
+            this.exportPblInfoButton.Size = new System.Drawing.Size(167, 34);
+            this.exportPblInfoButton.TabIndex = 15;
+            this.exportPblInfoButton.Text = "PBL情報エクスポート";
+            this.exportPblInfoButton.UseVisualStyleBackColor = false;
+            this.exportPblInfoButton.Click += new System.EventHandler(this.exportPblInfoButton_Click);
+            // 
+            // exportObjectInfoButton
+            // 
+            this.exportObjectInfoButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.exportObjectInfoButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightCyan;
+            this.exportObjectInfoButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.exportObjectInfoButton.Location = new System.Drawing.Point(289, 80);
+            this.exportObjectInfoButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.exportObjectInfoButton.Name = "exportObjectInfoButton";
+            this.exportObjectInfoButton.Size = new System.Drawing.Size(188, 34);
+            this.exportObjectInfoButton.TabIndex = 16;
+            this.exportObjectInfoButton.Text = "オブジェクト情報エクスポート";
+            this.exportObjectInfoButton.UseVisualStyleBackColor = false;
+            this.exportObjectInfoButton.Click += new System.EventHandler(this.exportObjectInfoButton_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 54);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(68, 18);
+            this.label5.TabIndex = 17;
+            this.label5.Text = "区切り文字";
+            // 
+            // delimiterComboBox
+            // 
+            this.delimiterComboBox.FormattingEnabled = true;
+            this.delimiterComboBox.Location = new System.Drawing.Point(80, 51);
+            this.delimiterComboBox.Name = "delimiterComboBox";
+            this.delimiterComboBox.Size = new System.Drawing.Size(68, 26);
+            this.delimiterComboBox.TabIndex = 18;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 18F);
@@ -398,5 +452,9 @@
         private Metroit.Windows.Forms.MetComboBox pbSelectComboBox;
         private Metroit.Windows.Forms.MetTextBox saveDirectoryTextBox;
         private System.Windows.Forms.CheckBox searchSubDirCheckBox;
+        private System.Windows.Forms.Button exportObjectInfoButton;
+        private System.Windows.Forms.Button exportPblInfoButton;
+        private System.Windows.Forms.ComboBox delimiterComboBox;
+        private System.Windows.Forms.Label label5;
     }
 }

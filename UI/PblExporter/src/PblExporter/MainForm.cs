@@ -13,11 +13,14 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Reflection;
 using System.Collections;
 using PblExporter.Core.Orca;
+using CsvHelper;
+using System.Globalization;
 
 namespace PblExporter
 {
     public partial class MainForm : Form
     {
+        private string InfoOutputFileName { get; } = "ObjectDefinitions.txt";
         private BindingSource bindingSource = new BindingSource();
         private List<PblData> pblListBoxItem = new List<PblData>();
 
@@ -35,6 +38,14 @@ namespace PblExporter
             pblListBox.DataSource = bindingSource;
             pblListBox.DisplayMember = "FileName";
             pblListBox.ValueMember = "FilePath";
+
+            // 区切り文字
+            var delimiterList = new List<Delimiter>();
+            delimiterList.Add(new Delimiter("カンマ", ","));
+            delimiterList.Add(new Delimiter("タブ", "\t"));
+            delimiterComboBox.DataSource = delimiterList;
+            delimiterComboBox.DisplayMember = "Name";
+            delimiterComboBox.ValueMember = "Value";
         }
 
         /// <summary>
@@ -487,6 +498,121 @@ namespace PblExporter
 
             //フォーカスを示す四角形を描画
             e.DrawFocusRectangle();
+        }
+
+        private void exportObjectInfoButton_Click(object sender, EventArgs e)
+        {
+            if (!ValidateExport(true))
+            {
+                return;
+            }
+
+            var supporter = (IPbSupporter)pbSelectComboBox.SelectedItem;
+            var outputDirectory = "";
+            try
+            {
+                outputDirectory = saveDirectoryTextBox.Text;
+                if (!Directory.Exists(outputDirectory))
+                {
+                    Directory.CreateDirectory(outputDirectory);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var objectInfoList = new List<ObjectInfo>();
+            foreach (var row in objectListView.SelectedItems.OfType<ListViewItem>())
+            {
+                objectInfoList.Add((ObjectInfo)row.Tag);
+            }
+
+            var filePath = Path.Combine(outputDirectory, InfoOutputFileName);
+            var encoding = Encoding.UTF8;
+            var csvConfig = new CsvHelper.Configuration.CsvConfiguration(CultureInfo.CurrentCulture);
+            csvConfig.HasHeaderRecord = false;
+            if (delimiterComboBox.SelectedItem != null)
+            {
+                csvConfig.Delimiter = ((Delimiter)delimiterComboBox.SelectedItem).Value;
+            } else
+            {
+                csvConfig.Delimiter = delimiterComboBox.Text;
+            }
+            csvConfig.Encoding = encoding;
+            csvConfig.NewLine = "\r\n";
+            csvConfig.ShouldQuote = (args) => true;
+            csvConfig.Quote = '"';
+
+            using (var sw = new StreamWriter(filePath, false, encoding))
+            using (var csv = new CsvHelper.CsvWriter(sw, csvConfig))
+            {
+                csv.Context.RegisterClassMap<CsvMap>();
+                csv.WriteRecords(objectInfoList);
+            }
+
+            MessageBox.Show("定義情報の出力が完了しました。", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void exportPblInfoButton_Click(object sender, EventArgs e)
+        {
+            if (!ValidateExport(false))
+            {
+                return;
+            }
+
+            var supporter = (IPbSupporter)pbSelectComboBox.SelectedItem;
+            var outputDirectory = "";
+            try
+            {
+                outputDirectory = saveDirectoryTextBox.Text;
+                if (!Directory.Exists(outputDirectory))
+                {
+                    Directory.CreateDirectory(outputDirectory);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var objectInfoList = new List<ObjectInfo>();
+            foreach (var pblData in pblListBox.SelectedItems.OfType<PblData>())
+            {
+                var result = supporter.GetObjectList(pblData.FilePath);
+                foreach (var item in result)
+                {
+                    objectInfoList.Add(item);
+                }
+            }
+
+            var filePath = Path.Combine(outputDirectory, InfoOutputFileName);
+            var encoding = Encoding.UTF8;
+            var csvConfig = new CsvHelper.Configuration.CsvConfiguration(CultureInfo.CurrentCulture);
+            csvConfig.HasHeaderRecord = false;
+            if (delimiterComboBox.SelectedItem != null)
+            {
+                csvConfig.Delimiter = ((Delimiter)delimiterComboBox.SelectedItem).Value;
+            }
+            else
+            {
+                csvConfig.Delimiter = delimiterComboBox.Text;
+            }
+            csvConfig.Encoding = encoding;
+            csvConfig.NewLine = "\r\n";
+            csvConfig.ShouldQuote = (args) => true;
+            csvConfig.Quote = '"';
+
+            using (var sw = new StreamWriter(filePath, false, encoding))
+            using (var csv = new CsvHelper.CsvWriter(sw, csvConfig))
+            {
+                csv.Context.RegisterClassMap<CsvMap>();
+                csv.WriteRecords(objectInfoList);
+            }
+
+            MessageBox.Show("定義情報の出力が完了しました。", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
