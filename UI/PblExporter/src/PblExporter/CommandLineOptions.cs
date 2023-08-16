@@ -58,5 +58,11 @@ namespace PblExporter
         /// </summary>
         [Option("out", Required = false, Default = null)]
         public string OutputDirectory { get; set; }
+
+        /// <summary>
+        /// PBL名がディレクトリ指定だった時、出力パスにPBLのディレクトリ構成を保持するかどうか。
+        /// </summary>
+        [Option("preserve", Required = false, Default = false)]
+        public bool Preserve { get; set; }
     }
 }

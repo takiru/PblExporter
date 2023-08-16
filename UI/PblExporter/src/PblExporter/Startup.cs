@@ -42,6 +42,7 @@ namespace PblExporter
             var recursive = CommandLineOptions.Value.Recursive;
             var outputHeader = CommandLineOptions.Value.OutputHeader;
             var outputDirectory = CommandLineOptions.Value.OutputDirectory;
+            var preserve = CommandLineOptions.Value.Preserve;
 
             // プラグインを取得できなかったらウィンドウ表示
             var supporter = Plugins.PluginList.FirstOrDefault((x) => x.Version == version);
@@ -117,7 +118,12 @@ namespace PblExporter
             {
                 if (isPblPathDirectory)
                 {
-                    outputPath = Path.Combine(outputDirectory, Path.GetFileNameWithoutExtension(path));
+                    outputPath = outputDirectory;
+                    if (preserve)
+                    {
+                        outputPath = Path.Combine(outputPath, Path.GetDirectoryName(path).Replace(pblPath, "").Trim(Path.DirectorySeparatorChar));
+                    }
+                    outputPath = Path.Combine(outputPath, Path.GetFileNameWithoutExtension(path));
                     if (!Directory.Exists(outputPath))
                     {
                         Directory.CreateDirectory(outputPath);
