@@ -193,11 +193,6 @@ namespace PblExporter.export
                 {
                     outputPath = Path.GetFullPath(Path.Combine(outputPath, relativeLibraryPath));
                     outputPath = Path.Combine(outputPath, Path.GetFileNameWithoutExtension(duplicatedLibraryPath));
-
-                    if (!Directory.Exists(outputPath))
-                    {
-                        Directory.CreateDirectory(outputPath);
-                    }
                 }
                 else
                 {
@@ -225,7 +220,46 @@ namespace PblExporter.export
 
             foreach (var pbt in parser.PbtItems)
             {
+                foreach (var library in pbt.LibraryItems.Where(x => x.Type == LibraryType.Pbl))
+                {
+                    var outputPath = Path.Combine(exportDirectory, Path.GetFileNameWithoutExtension(pbt.Path));
 
+                    // pbtパスを基準として相対パスを求める
+                    var pbtUri = new Uri(Path.GetDirectoryName(pbt.Path));
+                    var libraryUri = new Uri(Path.GetDirectoryName(library.Path));
+                    var relativeLibraryPath = pbtUri.MakeRelativeUri(libraryUri).ToString().Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+
+                    var pathRoot = string.IsNullOrEmpty(relativeLibraryPath) ? "" : Path.GetPathRoot(relativeLibraryPath);
+
+                    // 相対パスの場合
+                    if (pathRoot == "")
+                    {
+                        outputPath = Path.GetFullPath(Path.Combine(outputPath, relativeLibraryPath));
+                        outputPath = Path.Combine(outputPath, Path.GetFileNameWithoutExtension(library.Path));
+                    }
+                    else
+                    {
+                        // 絶対パスの場合
+                        var uri = new Uri(pathRoot);
+                        if (uri.IsUnc)
+                        {
+                            // ルートがネットワークパスの場合、ネットワークパスからのフォルダを作る
+                            outputPath = Path.Combine(outputPath, Path.GetFileNameWithoutExtension(library.Path).Substring(2));
+                        }
+                        else
+                        {
+                            // 異なるドライブレターのpblの場合、ドライブレターからのフォルダを作る
+                            outputPath = Path.Combine(outputPath, pathRoot[0].ToString(), Path.GetDirectoryName(library.Path).Substring(3), Path.GetFileNameWithoutExtension(library.Path));
+                        }
+                    }
+
+                    if (!Directory.Exists(outputPath))
+                    {
+                        Directory.CreateDirectory(outputPath);
+                    }
+
+                    Supporter.Export(library.Path, PbSupport.BulkExport, EntryType.None, outputHeader, outputPath);
+                }
             }
 
             ////var pblPaths = new List<string>();
