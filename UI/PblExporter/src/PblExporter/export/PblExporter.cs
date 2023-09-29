@@ -173,21 +173,14 @@ namespace PblExporter.export
                 if (relativeLibraryPath == "")
                 {
                     var parent = Path.GetDirectoryName(pbwPath);
-                    if (parent == Path.GetPathRoot(pbwPath))
+                    if (parent == Path.GetPathRoot(pbwPath) || Path.GetDirectoryName(parent) == Path.GetPathRoot(pbwPath))
                     {
-                        pbwUri = new Uri(parent);
+                        pbwUri = new Uri(Path.GetPathRoot(pbwPath));
                     }
                     else
                     {
                         parent = Path.GetDirectoryName(parent);
-                        if (parent == Path.GetPathRoot(pbwPath))
-                        {
-                            pbwUri = new Uri(parent);
-                        }
-                        else
-                        {
-                            pbwUri = new Uri(parent + Path.DirectorySeparatorChar);
-                        }
+                        pbwUri = new Uri(parent + Path.DirectorySeparatorChar);
                     }
 
                     relativeLibraryPath = pbwUri.MakeRelativeUri(libraryUri).ToString().Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
