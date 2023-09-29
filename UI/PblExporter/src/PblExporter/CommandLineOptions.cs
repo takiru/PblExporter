@@ -26,8 +26,14 @@ namespace PblExporter
         /// <summary>
         /// PBL名。
         /// </summary>
-        [Option("pbl", Required = true)]
+        [Option("pbl", Required = false, Default = null)]
         public string PblPath { get; set; }
+
+        /// <summary>
+        /// ワークスペースパス。
+        /// </summary>
+        [Option("pbw", Required = false, Default = null)]
+        public string WorkspacePath { get; set; }
 
         /// <summary>
         /// オブジェクト名。
@@ -54,7 +60,7 @@ namespace PblExporter
         public bool OutputHeader { get; set; }
 
         /// <summary>
-        /// 出力パス。
+        /// 出力ディレクトリパス。
         /// </summary>
         [Option("out", Required = false, Default = null)]
         public string OutputDirectory { get; set; }
@@ -64,5 +70,11 @@ namespace PblExporter
         /// </summary>
         [Option("preserve", Required = false, Default = false)]
         public bool Preserve { get; set; }
+
+        /// <summary>
+        /// エクスポートする前に出力ディレクトリパスの中身を削除するかどうか。
+        /// </summary>
+        [Option("out-delete", Required = false, Default = false)]
+        public bool OutputDelete { get; set; }
     }
 }

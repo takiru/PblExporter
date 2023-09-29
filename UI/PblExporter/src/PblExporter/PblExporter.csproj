@@ -56,6 +56,11 @@
     <Compile Include="CommandLineOptions.cs" />
     <Compile Include="CsvMap.cs" />
     <Compile Include="Delimiter.cs" />
+    <Compile Include="export\LibraryInfo.cs" />
+    <Compile Include="export\LibraryType.cs" />
+    <Compile Include="export\PblExporter.cs" />
+    <Compile Include="export\PbtParser.cs" />
+    <Compile Include="export\PbwParser.cs" />
     <Compile Include="ListViewItemComparer.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
