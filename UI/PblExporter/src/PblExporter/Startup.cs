@@ -71,9 +71,12 @@ namespace PblExporter
             }
 
             // 指定されたpblフォルダ／ファイルが存在しない
-            if (!Directory.Exists(options.PblPath) && !File.Exists(options.PblPath))
+            if (string.IsNullOrEmpty(options.WorkspacePath))
             {
-                return false;
+                if (!Directory.Exists(options.PblPath) && !File.Exists(options.PblPath))
+                {
+                    return false;
+                }
             }
 
             return true;
