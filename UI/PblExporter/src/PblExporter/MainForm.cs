@@ -249,24 +249,12 @@ namespace PblExporter
             }
 
             var supporter = (IPbSupporter)pbSelectComboBox.SelectedItem;
+            var exporter = new export.PblExporter(supporter);
+            var outputDirectory = saveDirectoryTextBox.Text;
 
             foreach (var pblData in pblListBox.SelectedItems.OfType<PblData>())
             {
-                var outputDirectory = "";
-                try
-                {
-                    outputDirectory = Path.Combine(saveDirectoryTextBox.Text, Path.GetFileNameWithoutExtension(pblData.FilePath));
-                    if (!Directory.Exists(outputDirectory))
-                    {
-                        Directory.CreateDirectory(outputDirectory);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                supporter.Export(pblData.FilePath, PbSupport.BulkExport, EntryType.None, outputHeaderCheckBox.Checked, outputDirectory);
+                exporter.ExportByPbl(pblData.FilePath, outputHeaderCheckBox.Checked, outputDirectory, false);
             }
             MessageBox.Show("エクスポートが完了しました。", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -284,27 +272,16 @@ namespace PblExporter
             }
 
             var supporter = (IPbSupporter)pbSelectComboBox.SelectedItem;
+            var exporter = new export.PblExporter(supporter);
+            var outputDirectory = saveDirectoryTextBox.Text;
 
             var pblData = (PblData)pblListBox.SelectedItem;
-            var outputDirectory = "";
-            try
-            {
-                outputDirectory = Path.Combine(saveDirectoryTextBox.Text, Path.GetFileNameWithoutExtension(pblData.FilePath));
-                if (!Directory.Exists(outputDirectory))
-                {
-                    Directory.CreateDirectory(outputDirectory);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
             foreach (var row in objectListView.SelectedItems.OfType<ListViewItem>())
             {
                 var objectData = (ObjectInfo)row.Tag;
-                supporter.Export(pblData.FilePath, objectData.ObjectName, objectData.EntryType, outputHeaderCheckBox.Checked, outputDirectory);
+                exporter.ExportByFile(pblData.FilePath, objectData.ObjectName, objectData.EntryType, outputHeaderCheckBox.Checked, outputDirectory);
             }
+
             MessageBox.Show("エクスポートが完了しました。", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -536,7 +513,8 @@ namespace PblExporter
             if (delimiterComboBox.SelectedItem != null)
             {
                 csvConfig.Delimiter = ((Delimiter)delimiterComboBox.SelectedItem).Value;
-            } else
+            }
+            else
             {
                 csvConfig.Delimiter = delimiterComboBox.Text;
             }

@@ -77,40 +77,51 @@ PBL内のすべてのオブジェクトについて、コメント、最終変�
 
 # コマンド実行
 --ver  PBバージョン  
---pbl  PBLファイル  
+--pbl  pblファイル もしくは pblファイルを有するディレクトリ  
+--pbw  pbwファイル  
 --name オブジェクト名  
 --type オブジェクトタイプ  
 --out  出力先ディレクトリパス。未指定の場合はPblExporter.exeと同じディレクトリとなる。  
 --header ファイルヘッダーを付与する  
 --recursive サブディレクトリまで検索する  
 --preserve PBLファイルにディレクトリが指定された時、元のディレクトリ構造を保持します。  
+--out-delete --pbl, --pbw オプションを指定した場合に、出力先ディレクトリパス内をすべてクリアする。  
+　　　　　--name, --type オプションを指定した場合は機能しない。  
+　　　　　出力先ディレクトリが --pbl, --pbw オプションと同一のディレクトリの場合は機能しない。  
 
 例1  
-test.pblからファクションf_testをエクスポート  
+test.pblからファクションf_testをエクスポートする。  
 ```
 PblExporter.exe --ver "11.5" --pbl "D:\test.pbl" --name "f_test" --type "Function" --out "D:\Exp"
 ```
 
 例2  
-ファイルヘッダーを出力してエクスポート  
+ファイルヘッダーを出力してエクスポートする。  
 ```
 PblExporter.exe --ver "11.5" --pbl "D:\test.pbl" --name "f_test" --type "Function" --out "D:\Exp" --header
 ```
 
 例3  
-test.pblからすべてのオブジェクトをエクスポート  
+test.pblからすべてのオブジェクトをエクスポートする。  
 ```
-PblExporter.exe --ver "11.5" --pbl "D:\test.pbl" --out "D:\Exp"
+PblExporter.exe --ver "11.5" --pbl "D:\test.pbl" --out "D:\Exp" --header
 ```
 
 例4  
-testフォルダからすべてのオブジェクトをエクスポート  
+testディレクトリからすべてのオブジェクトをエクスポートする。  
 ```
-PblExporter.exe --ver "11.5" --pbl "D:\test" --out "D:\Exp"
+PblExporter.exe --ver "11.5" --pbl "D:\test" --out "D:\Exp" --header
 ```
 
 例5  
-testフォルダ配下からすべてのオブジェクトをディレクトリ構造を保持してエクスポート  
+testディレクトリ配下からすべてのオブジェクトをディレクトリ構造を保持してエクスポートする。  
 ```
-PblExporter.exe --ver "11.5" --pbl "D:\test" --out "D:\Exp" --recursive --preserve
+PblExporter.exe --ver "11.5" --pbl "D:\test" --out "D:\Exp" --header --recursive --preserve
+```
+
+例6  
+test.pbwに認識されているpbtファイル内のライブラリリストpblから、すべてのオブジェクトをディレクトリ構造を保持してエクスポートする。  
+エクスポート前にD:\Expディレクトリ内をすべて削除する。  
+```
+PblExporter.exe --ver "11.5" --pbw "D:\test.pbw" --out "D:\Exp" --header --out-delete
 ```

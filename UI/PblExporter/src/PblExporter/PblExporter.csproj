@@ -58,6 +58,7 @@
     <Compile Include="Delimiter.cs" />
     <Compile Include="export\LibraryInfo.cs" />
     <Compile Include="export\LibraryType.cs" />
+    <Compile Include="export\ParserBase.cs" />
     <Compile Include="export\PblExporter.cs" />
     <Compile Include="export\PbtParser.cs" />
     <Compile Include="export\PbwParser.cs" />
@@ -98,9 +99,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommandLineParser">

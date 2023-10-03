@@ -10,12 +10,17 @@ namespace PblExporter.export
     /// <summary>
     /// pbtファイルの解析を提供します。
     /// </summary>
-    public class PbtParser
+    public class PbtParser : ParserBase
     {
         /// <summary>
-        /// pbtファイルパスを取得します。
+        /// pbtファイルの相対パスを取得します。
         /// </summary>
         public string Path { get; }
+
+        /// <summary>
+        /// pbtファイルのフルパスを取得します。
+        /// </summary>
+        public string FullPath { get; }
 
         /// <summary>
         /// pbtファイルから見つかったライブラリファイルパス群を取得します。
@@ -30,23 +35,29 @@ namespace PblExporter.export
         /// <summary>
         /// 新しいインスタンスを生成する。
         /// </summary>
-        /// <param name="pbtPath">pbtファイルパス。</param>
-        private PbtParser(string pbtPath)
+        /// <param name="pbwPath">pbwファイルパス。</param>
+        /// <param name="encodedPbtRelativePath">エンコードされたpbtファイルの相対パス。</param>
+        private PbtParser(string pbwPath, string encodedPbtRelativePath)
         {
-            var pbtText = ReadPbt(pbtPath);
-            ParseLibraryList(pbtPath, pbtText);
+            var normalizePbtPath = NormalizePath(encodedPbtRelativePath);
+            var pbtFullPath = GetFullPath(pbwPath, normalizePbtPath);
 
-            Path = pbtPath;
+            var pbtText = ReadPbt(pbtFullPath);
+            ParseLibraryList(pbtFullPath, GetLibraryList(pbtText));
+
+            Path = normalizePbtPath;
+            FullPath = pbtFullPath;
         }
 
         /// <summary>
         /// pbtファイルを解析します。
         /// </summary>
-        /// <param name="pbtPath">pbtファイルパス。</param>
+        /// <param name="pbwPath">pbwファイルパス。</param>
+        /// <param name="encodedPbtRelativePath">エンコードされたpbtファイルの相対パス。</param>
         /// <returns>PblParser。</returns>
-        public static PbtParser Parse(string pbtPath)
+        public static PbtParser Parse(string pbwPath, string encodedPbtRelativePath)
         {
-            return new PbtParser(pbtPath);
+            return new PbtParser(pbwPath, encodedPbtRelativePath);
         }
 
         /// <summary>
@@ -65,11 +76,10 @@ namespace PblExporter.export
         }
 
         /// <summary>
-        /// ライブラリリストを解析して、利用しているpbl, pbdをフルパスで把握する。
+        /// ライブラリリスト部を解析して、利用しているライブラリリストファイルパスで取得する。
         /// </summary>
-        /// <param name="pbtPath">pbtファイルパス。</param>
         /// <param name="pbtText">pbtファイル内容。</param>
-        private void ParseLibraryList(string pbtPath, string pbtText)
+        private string[] GetLibraryList(string pbtText)
         {
             // ライブラリリスト部を取得
             var matchArea = LibListRegex.Match(pbtText);
@@ -82,22 +92,26 @@ namespace PblExporter.export
             var libraryRawPaths = matchArea.Groups[1].Value.Split(';');
 
             // NOTE: 全角文字はUnicodeエンコードされているため、デコードしたものを把握する。
-            var libraryItems = new List<LibraryInfo>();
+            var libraryPaths = new List<string>();
             foreach (var libraryRawPath in libraryRawPaths)
             {
-                string libraryPath;
-                if (IO.Path.GetPathRoot(libraryRawPath) == "")
-                {
-                    // 相対パス
-                    libraryPath = IO.Path.GetFullPath(IO.Path.Combine(IO.Path.GetDirectoryName(pbtPath), Regex.Unescape(libraryRawPath)));
-                }
-                else
-                {
-                    // ドライブレターやネットワークパス
-                    libraryPath = Regex.Unescape(libraryRawPath);
-                }
+                libraryPaths.Add(libraryRawPath);
+            }
 
-                libraryItems.Add(new LibraryInfo(libraryPath));
+            return libraryPaths.ToArray();
+        }
+
+        /// <summary>
+        /// ライブラリリストファイルを把握する。
+        /// </summary>
+        /// <param name="pbtPath">pbtファイルパス。</param>
+        /// <param name="encodedLibraryRelativePaths">エンコードされたライブラリファイルの相対パス。</param>
+        private void ParseLibraryList(string pbtPath, string[] encodedLibraryRelativePaths)
+        {
+            var libraryItems = new List<LibraryInfo>();
+            foreach (var encodedLibraryRelativePath in encodedLibraryRelativePaths)
+            {
+                libraryItems.Add(new LibraryInfo(pbtPath, encodedLibraryRelativePath));
             }
 
             LibraryItems = libraryItems.ToArray();

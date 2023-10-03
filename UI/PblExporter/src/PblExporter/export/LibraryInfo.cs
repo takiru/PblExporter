@@ -5,7 +5,7 @@ namespace PblExporter.export
     /// <summary>
     /// ライブラリ情報を提供します。
     /// </summary>
-    public class LibraryInfo
+    public class LibraryInfo : ParserBase
     {
         /// <summary>
         /// ライブラリのタイプを取得します。
@@ -18,13 +18,33 @@ namespace PblExporter.export
         public string Path { get; }
 
         /// <summary>
+        /// ライブラリファイルのフルパスを取得します。
+        /// </summary>
+        public string FullPath { get; }
+
+        /// <summary>
         /// 新しいインスタンスを生成します。
         /// </summary>
-        /// <param name="path">ライブラリパス。</param>
-        public LibraryInfo(string path)
+        /// <param name="pbtPath">pbtファイルパス。</param>
+        /// <param name="encodedLibraryRelativePath">エンコードされたライブラリの相対パス。</param>
+        public LibraryInfo(string pbtPath, string encodedLibraryRelativePath)
         {
-            Type = IO.Path.GetExtension(path) == ".pbl" ? LibraryType.Pbl : LibraryType.Pbd;
-            Path = path;
+            var normalizeLibraryPath = NormalizePath(encodedLibraryRelativePath);
+            var libraryFullPath = GetFullPath(pbtPath, normalizeLibraryPath);
+
+            Type = GetLibraryType(libraryFullPath);
+            Path = normalizeLibraryPath;
+            FullPath = libraryFullPath;
+        }
+
+        /// <summary>
+        /// ライブラリの種類を取得します。
+        /// </summary>
+        /// <param name="path">ライブラリパス。</param>
+        /// <returns>LibraryType。</returns>
+        public static LibraryType GetLibraryType(string path)
+        {
+            return IO.Path.GetExtension(path) == ".pbl" ? LibraryType.Pbl : LibraryType.Pbd;
         }
     }
 }

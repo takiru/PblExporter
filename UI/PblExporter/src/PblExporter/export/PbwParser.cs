@@ -9,7 +9,7 @@ namespace PblExporter.export
     /// <summary>
     /// ワークスペース（pbwファイル）の解析を提供します。
     /// </summary>
-    public class PbwParser
+    public class PbwParser : ParserBase
     {
         /// <summary>
         /// pbwファイルパスを取得します。
@@ -38,7 +38,7 @@ namespace PblExporter.export
         private PbwParser(string pbwPath)
         {
             var pbwText = ReadPbw(pbwPath);
-            ParsePbtList(GetPbtList(pbwPath, pbwText));
+            ParsePbtList(pbwPath, GetPbtList(pbwText));
 
             Path = pbwPath;
         }
@@ -69,11 +69,10 @@ namespace PblExporter.export
         }
 
         /// <summary>
-        /// pbt記載領域を解析して、利用しているpbtをフルパスで取得する。
+        /// pbt記載領域を解析して、利用しているpbtパスで取得する。
         /// </summary>
-        /// <param name="pbwPath">pbwファイルパス。</param>
         /// <param name="pbwText">pbwファイル内容。</param>
-        private string[] GetPbtList(string pbwPath, string pbwText)
+        private string[] GetPbtList(string pbwText)
         {
             // pbt記載領域部を取得
             var matchArea = PbtGroupRegex.Match(pbwText);
@@ -91,36 +90,25 @@ namespace PblExporter.export
 
             var pbtPaths = new List<string>();
 
-            // NOTE: 全角文字はUnicodeエンコードされているため、デコードしたものを把握する。
             foreach (Match matchPbtRawPath in matchMbtRawPaths)
             {
-                var pbtRawPath = matchPbtRawPath.Groups[2].Value;
-
-                if (IO.Path.GetPathRoot(pbtRawPath) == "")
-                {
-                    // 相対パス
-                    pbtPaths.Add(IO.Path.GetFullPath(IO.Path.Combine(IO.Path.GetDirectoryName(pbwPath), Regex.Unescape(pbtRawPath))));
-                }
-                else
-                {
-                    // ドライブレターやネットワークパス
-                    pbtPaths.Add(Regex.Unescape(pbtRawPath));
-                }
+                pbtPaths.Add(matchPbtRawPath.Groups[2].Value);
             }
 
             return pbtPaths.ToArray();
         }
 
         /// <summary>
-        /// pbtファイルを解析して把握する。
+        /// pbtファイルを把握する。
         /// </summary>
-        /// <param name="pbtList">pbtファイルパス群。</param>
-        private void ParsePbtList(string[] pbtList)
+        /// <param name="pbwPath">pbwファイルパス。</param>
+        /// <param name="encodedPbtRelativePaths">エンコードされたpbtファイルの相対パス。</param>
+        private void ParsePbtList(string pbwPath, string[] encodedPbtRelativePaths)
         {
             var pbtItems = new List<PbtParser>();
-            foreach (var pbtPath in pbtList)
+            foreach (var encodedPbtRelativePath in encodedPbtRelativePaths)
             {
-                pbtItems.Add(PbtParser.Parse(pbtPath));
+                pbtItems.Add(PbtParser.Parse(pbwPath, encodedPbtRelativePath));
             }
 
             PbtItems = pbtItems.ToArray();
