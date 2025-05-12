@@ -49,8 +49,11 @@ namespace PblExporter.export
                 if (exportDirectory != targetDirectory)
                 {
                     DirectoryInfo directory = new DirectoryInfo(exportDirectory);
-                    directory.EnumerateFiles().ToList().ForEach(f => f.Delete());
-                    directory.EnumerateDirectories().ToList().ForEach(d => d.Delete(true));
+                    if (directory.Exists)
+                    {
+                        directory.EnumerateFiles().ToList().ForEach(f => f.Delete());
+                        directory.EnumerateDirectories().ToList().ForEach(d => d.Delete(true));
+                    }
                 }
             }
         }
@@ -289,36 +292,19 @@ namespace PblExporter.export
         {
             var result = new List<string>();
 
-            findRecursivePblPaths(pblDirectory, result);
+            var files = Directory.GetFiles(pblDirectory, "*.pbl", SearchOption.AllDirectories);
+            foreach (var file in files)
+            {
+                var fi = new FileInfo(file);
+                if ((fi.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden)
+                {
+                    continue;
+                }
+
+                result.Add(file);
+            }
 
             return result.ToArray();
-        }
-
-        /// <summary>
-        /// 再帰的にディレクトリを操作してすべてのpblパスを得る。
-        /// 隠しフォルダ、システムフォルダは除外する。
-        /// </summary>
-        /// <param name="pblDirectory">pblファイルのディレクトリパス。</param>
-        /// <param name="pblPaths">pblファイルパス群。</param>
-        private void findRecursivePblPaths(string pblDirectory, List<string> pblPaths)
-        {
-            pblPaths.AddRange(findPblPaths(pblDirectory));
-
-            var directories = Directory.GetDirectories(pblDirectory, "*", SearchOption.AllDirectories);
-            foreach (var directory in directories)
-            {
-                var di = new DirectoryInfo(directory);
-                if ((di.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden)
-                {
-                    continue;
-                }
-                if ((di.Attributes & FileAttributes.System) == FileAttributes.System)
-                {
-                    continue;
-                }
-
-                findRecursivePblPaths(directory, pblPaths);
-            }
         }
 
         /// <summary>
